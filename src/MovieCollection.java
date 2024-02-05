@@ -188,6 +188,47 @@ public class MovieCollection
                 counter++;
             }
         }
+        System.out.println("Which cast member would you like to learn more about?");
+        System.out.print("Enter number: ");
+        int numberInput = Integer.parseInt(scanner.nextLine());
+        String name = "";
+        counter = 0;
+        for (int i = 0; i < actorList.length && counter != numberInput; i++) {
+            if (actorList[i] != null) {
+                counter++;
+            }
+            if (counter == numberInput) {
+                name = actorList[i];
+            }
+        }
+        ArrayList<Movie> actorMovies = new ArrayList<Movie>();
+        for (Movie movie: movies) {
+            if (movie.getCast().contains(name)) {
+                actorMovies.add(movie);
+            }
+        }
+        sortResults(actorMovies);
+        for (int i = 0; i < actorMovies.size(); i++)
+        {
+            String title = actorMovies.get(i).getTitle();
+
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
+
+            System.out.println("" + choiceNum + ". " + actorMovies.get(i).getTitle());
+        }
+        System.out.println("Which movie would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = actorMovies.get(choice - 1);
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
     }
 
     private void searchKeywords()
