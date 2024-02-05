@@ -286,7 +286,25 @@ public class MovieCollection
 
     private void listGenres()
     {
+        TreeSet<String> genres = new TreeSet<String>();
+        for (Movie movie: movies) {
+            String[] genre = movie.getGenres().split("\\|");
+            for (int i = 0; i < genre.length; i++) {
+                genres.add(genre[i]);
+            }
+        }
+        int counter = 0;
+        for (String genre: genres) {
+            counter++;
+            System.out.println(counter + ". " + genre);
+        }
 
+        System.out.print("Choose a genre: ");
+        String input = scanner.nextLine();
+        ArrayList<Movie> movies = new ArrayList<Movie>();
+        for (Movie movie: movies) {
+
+        }
     }
 
     private void listHighestRated()
