@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.TreeSet;
+import java.util.*;
 
 public class MovieCollection
 {
@@ -289,10 +286,9 @@ public class MovieCollection
         TreeSet<String> genres = new TreeSet<String>();
         for (Movie movie: movies) {
             String[] genre = movie.getGenres().split("\\|");
-            for (int i = 0; i < genre.length; i++) {
-                genres.add(genre[i]);
-            }
+            genres.addAll(Arrays.asList(genre));
         }
+        String[] genresList = genres.toArray(new String[0]);
         int counter = 0;
         for (String genre: genres) {
             counter++;
@@ -300,21 +296,75 @@ public class MovieCollection
         }
 
         System.out.print("Choose a genre: ");
-        String input = scanner.nextLine();
-        ArrayList<Movie> movies = new ArrayList<Movie>();
+        int input = Integer.parseInt(scanner.nextLine());
+        ArrayList<Movie> movieGenre = new ArrayList<Movie>();
+        System.out.println(genresList[input + 1]);
         for (Movie movie: movies) {
-
+            if (movie.getGenres().contains(genresList[input - 1])) {
+                movieGenre.add(movie);
+            }
         }
+        sortResults(movieGenre);
+        for (int i = 0; i < movieGenre.size(); i++)
+        {
+            String title = movieGenre.get(i).getTitle();
+
+            // this will print index 0 as choice 1 in the results list; better for user!
+            int choiceNum = i + 1;
+
+            System.out.println("" + choiceNum + ". " + movieGenre.get(i).getTitle());
+        }
+        System.out.print("Choose a title: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = movieGenre.get(choice - 1);
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
     }
 
     private void listHighestRated()
     {
+        ArrayList<Movie> temp = (ArrayList<Movie>)movies.clone();
+        ArrayList<Movie> temp2 = (ArrayList<Movie>)movies.clone();
+        do {
+            temp = (ArrayList<Movie>)temp2.clone();
+            for (int i = 1; i < temp2.size(); i++) {
+                if (temp2.get(i).getUserRating() > temp2.get(i - 1).getUserRating()) {
+                    Movie temporary = temp2.get(i - 1);
+                    temp2.set(i - 1, temp2.get(i));
+                    temp2.set(i, temporary);
+                }
+            }
+        } while (!temp.equals(temp2));
 
+        for (int i = 0; i < 50; i++) {
+            System.out.println(i + 1 + ". " + temp.get(i).getTitle() + ": " + temp.get(i).getUserRating());
+        }
     }
 
     private void listHighestRevenue()
     {
+        ArrayList<Movie> temp = (ArrayList<Movie>)movies.clone();
+        ArrayList<Movie> temp2 = (ArrayList<Movie>)movies.clone();
+        do {
+            temp = (ArrayList<Movie>)temp2.clone();
+            for (int i = 1; i < temp2.size(); i++) {
+                if (temp2.get(i).getRevenue() > temp2.get(i - 1).getRevenue()) {
+                    Movie temporary = temp2.get(i - 1);
+                    temp2.set(i - 1, temp2.get(i));
+                    temp2.set(i, temporary);
+                }
+            }
+        } while (!temp.equals(temp2));
 
+        for (int i = 0; i < 50; i++) {
+            System.out.println(i + 1 + ". " + temp.get(i).getTitle() + ": " + temp.get(i).getRevenue());
+        }
     }
 
     private void importMovieList(String fileName)
